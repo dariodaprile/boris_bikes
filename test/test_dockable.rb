@@ -4,61 +4,58 @@ require '../lib/bike/bike.rb'
 
 class DockableClass
 
+  include Dockable
+ 
   def initialize(options={})
     set_defaults options
   end
 
-  include Dockable
 end
 
-class TestBike < MiniTest::Unit::TestCase
+class TestBikeDocking < MiniTest::Unit::TestCase
 
+  def setup
+    @bike = Bike.new(1)
+    @docked = DockableClass.new
+  end
+  
   def test_dock_a_bike
-    bike = Bike.new(1)
-    dock = DockableClass.new
-    assert dock.empty?
-    dock.dock(bike)
-    refute dock.empty?
+    assert @docked.empty?
+    @docked.dock(@bike)
+    refute @docked.empty?
   end
 
   def test_undock_a_bike
-    bike = Bike.new(1)
-    bike.break!
-    docked = DockableClass.new
-    docked.dock(bike)
-    refute docked.empty?
-    docked.undock(bike)
-    assert docked.empty?
+    @bike.break!
+    @docked.dock(@bike)
+    refute @docked.empty?
+    @docked.undock(@bike)
+    assert @docked.empty?
+  end
+
+ end 
+
+class TestBikeAvailability < MiniTest::Unit::TestCase
+  
+  def setup
+    @working_bike = Bike.new(1)
+    @broken_bike = Bike.new(2)
+    @broken_bike.break!
+    @docked = DockableClass.new
+    @docked.dock(@working_bike)
+    @docked.dock(@broken_bike)
   end
 
   def test_list_of_available_bikes
-    working_bike = Bike.new(1)
-    broken_bike = Bike.new(2)
-    broken_bike.break!
-    docked = DockableClass.new
-    docked.dock(working_bike)
-    docked.dock(broken_bike)
-    assert_equal 1, docked.available_bikes.count
+    assert_equal 1, @docked.available_bikes.count
   end
 
   def test_list_of_broken_bikes
-    working_bike = Bike.new(1)
-    broken_bike = Bike.new(2)
-    broken_bike.break!
-    docked = DockableClass.new
-    docked.dock(working_bike)
-    docked.dock(broken_bike)
-    assert_equal 1, docked.broken_bikes.count
+    assert_equal 1, @docked.broken_bikes.count
   end
 
   def test_list_of_all_bikes
-    working_bike = Bike.new(1)
-    broken_bike = Bike.new(2)
-    broken_bike.break!
-    docked = DockableClass.new
-    docked.dock(working_bike)
-    docked.dock(broken_bike)
-    assert_equal 2, docked.send(:bikes).count
+    assert_equal 2, @docked.send(:bikes).count
   end
 
   def test_undock_available_bike
