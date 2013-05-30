@@ -1,5 +1,5 @@
 require 'test/unit'
-require '../lib/bike/bike.rb'
+require '../lib/bike.rb'
 
 class TestBike < MiniTest::Unit::TestCase
 

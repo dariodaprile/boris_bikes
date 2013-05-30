@@ -1,11 +1,11 @@
 require 'test/unit'
-require '../lib/dockable/dockable.rb'
-require '../lib/bike/bike.rb'
+require '../lib/dockable.rb'
+require '../lib/bike.rb'
 
 class DockableClass
 
   include Dockable
- 
+
   def initialize(options={})
     set_defaults options
   end
@@ -18,7 +18,7 @@ class TestBikeDocking < MiniTest::Unit::TestCase
     @bike = Bike.new(1)
     @docked = DockableClass.new
   end
-  
+
   def test_dock_a_bike
     assert @docked.empty?
     @docked.dock(@bike)
@@ -33,10 +33,10 @@ class TestBikeDocking < MiniTest::Unit::TestCase
     assert @docked.empty?
   end
 
- end 
+ end
 
 class TestBikeAvailability < MiniTest::Unit::TestCase
-  
+
   def setup
     @working_bike = Bike.new(1)
     @broken_bike = Bike.new(2)
